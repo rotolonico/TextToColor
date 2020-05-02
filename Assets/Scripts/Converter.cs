@@ -5,17 +5,27 @@ using UnityEngine;
 
 public static class Converter
 {
+    public static readonly List<string> LastHexes = new List<string>();
+    
     public static List<Color> TextToColor(string text)
     {
         var bytes = Encoding.ASCII.GetBytes(text);
         var hexString = ByteArrayToHex(bytes);
         var colors = new List<Color>();
+        
+        LastHexes.Clear();
+        
         for (var i = 0; i < hexString.Length; i += 6)
-            colors.Add(HexToColor(hexString.Substring(i, Math.Min(6, hexString.Length - i))));
+        {
+            var hex = hexString.Substring(i, Math.Min(6, hexString.Length - i));
+            LastHexes.Add(hex);
+            colors.Add(HexToColor(hex));
+        }
+        
         return colors;
     }
 
-    public static string ColorToText(string colors) => Encoding.ASCII.GetString(HexToByteArray(colors.Replace(",", "").Replace("#", "")));
+    public static string ColorToText(string colors) => Encoding.ASCII.GetString(HexToByteArray(colors.Replace(",", "").Replace("#", "").Replace(" ", "")));
 
     private static string ByteArrayToHex(IReadOnlyCollection<byte> ba)
     {

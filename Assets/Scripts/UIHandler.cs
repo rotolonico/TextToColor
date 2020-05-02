@@ -13,8 +13,6 @@ public class UIHandler : MonoBehaviour
     public Button textToColor;
     public Button colorToText;
 
-    public TMP_InputField textOutput;
-
     public Transform colorsHolder;
     public GameObject colorGameObject;
 
@@ -26,6 +24,8 @@ public class UIHandler : MonoBehaviour
 
     private void TextToColor()
     {
+        if (textInput.text == "") return;
+        
         var colors = Converter.TextToColor(textInput.text);
         
         foreach (Transform child in colorsHolder) Destroy(child.gameObject);
@@ -36,10 +36,12 @@ public class UIHandler : MonoBehaviour
             newColor.transform.SetParent(colorsHolder, false);
             newColor.GetComponent<Image>().color = color;
         }
+
+        colorInput.text = "#" + string.Join(", #", Converter.LastHexes);
     }
 
     private void ColorToText()
     {
-        textOutput.text = Converter.ColorToText(colorInput.text);
+        textInput.text = Converter.ColorToText(colorInput.text);
     }
 }
